@@ -8,107 +8,117 @@ public class TuringMachine {
 	private int n;
 	public TuringMachine() {
 		first=null;
-		c0=null;
-		c1=null;
-		c2=null;
+		c0=c1=c2=null;
 		n=-1;
+	}
+	public char read(char head) {
+		if(first!=null) {
+			if(head=='0') {
+				return c0.getName();
+			}else if(head=='1') {
+				return c1.getName();
+			}else if(head=='2') {
+				return c2.getName();
+			}
+		}
+		return '#';
 	}
 	public void add(char head,char name) {
 		Tape add=new Tape(name);
 		if(first!=null) {
-			Tape curr=first;
 			if(head=='0') {
-				add.setNext(curr);
+				Tape tmp=first;
+				tmp.setPrevious(add);
+				add.setNext(tmp);
 				first=add;
+				c0=first;
+				n++;//01
+				if(n%2!=0)c1=c1.getPrevious();
+				n+=0;
 			}else if(head=='1') {
-				
-			}else if(head=='2') {
-				
-			}
-		}else {
-			first=add;
-			c0=first;
-			c1=first;
-			c2=first;
-		}
-	}
-	/*public char read(char head) {
-		Tape current = first;
-		int c1=n==0?0:n/2;
-		int c=0;
-		while(current!=null) {
-			if(head=='0') {
-				return current.getName();
-			}else if(head=='1'&&c==c1) {
-				return current.getName();
-			}else if(head=='2'&&c==n) {
-				return current.getName();
-			}
-			current=current.getNext();
-			c++;
-		}
-		return '#';
-	}
-	public void add(char head, char name) {
-		Tape add=new Tape(name);
-		Tape current = first;
-		if(first==null) {
-			first=add;
-			n++;
-		}else {
-			int c1=n==0?0:n/2;
-			int c = 0;
-			while(current!=null) {
-				if(head=='0') {
-					add.setNext(current);
-					first=add;
-					n++;
-					break;
-				}else if(head=='1'&&c==c1) {
-					Tape next=current.getNext();
-					current.setNext(add);
+				if(n%2==0) {
+					Tape prev=c1.getPrevious();
+					if(prev==null) {
+						add.setNext(c1);
+						c1.setPrevious(add);
+						first=add;
+						c0=first;
+						c1=first;
+					}else {
+						prev.setNext(add);
+						add.setPrevious(prev);
+						add.setNext(c1);
+						c1.setPrevious(add);
+						c1=c1.getPrevious();
+					}
+				}else {
+					Tape next=c1.getNext();
+					c1.setNext(add);
+					add.setPrevious(c1);
 					add.setNext(next);
-					n++;
-					break;
-				}else if(head=='2'&&current.getNext()==null){
-					current.setNext(add);
-					n++;
-					break;
+					next.setPrevious(add);
+					c1=c1.getNext();
 				}
-				current=current.getNext();
-				c++;
+				n++;
+			}else if(head=='2') {
+				add.setPrevious(c2);
+				c2.setNext(add);
+				c2=c2.getNext();
+				n++;
+				if(n%2==0)c1=c1.getNext();
 			}
+		}else {
+			first=add;
+			c0=c1=c2=first;
+			n++;
 		}
 	}
 	public void delete(char head) {
-		Tape prev=null;
-		Tape current=first;
-		Tape next=current.getNext();
-		int c1=n==0?0:n/2;
-		int c=0;
-		while(current!=null) {
+		if(first!=null) {
 			if(head=='0') {
-				first=next;
-				n--;
-				break;
-			}else if(head=='1'&&c==c1) {
-				if(prev==null) {
+				Tape next=first.getNext();
+				if(next!=null) {
+					next.setPrevious(null);
 					first=next;
+					if(n%2!=0)c1=c1.getNext();
 				}else {
+					first=null;
+					c1=c2=first;
+				}
+				c0=first;
+				n--;
+			}else if(head=='1') {
+				Tape prev=c1.getPrevious();
+				Tape next=c1.getNext();
+				if(prev!=null) {
+					c1.setPrevious(null);
+					c1.setNext(null);
 					prev.setNext(next);
+					next.setPrevious(prev);
+					if(n%2==0)c1=prev;
+					if(n%2!=0)c1=next;
+				}else {
+					c1.setNext(null);
+					if(next!=null)next.setPrevious(null);
+					first=next;
+					c0=first;
+					c1=first;
+					c2=first;
 				}
 				n--;
-				break;
-			}else if(head=='2'&&next==null) {
-				current=null;
+			}else if(head=='2') {
+				Tape prev=c2.getPrevious();
+				if(prev!=null) {
+					prev.setNext(null);
+					c2.setPrevious(null);
+					c2=prev;
+					if(n%2==0)c1=c1.getPrevious();
+				}else {
+					first=null;
+					c0=c1=c2=first;
+				}
 				n--;
-				break;
 			}
-			prev=current;
-			current=current.getNext();
-			next=next.getNext();
-			c++;
 		}
 	}
-	*/
 }
