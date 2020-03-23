@@ -16,7 +16,6 @@ public class Main {
 		BufferedWriter bw=new BufferedWriter(new FileWriter(OUTPUT));
 		Main main = new Main();
 		String s=null;
-		String toWrite="";
 		s=br.readLine();
 		while(s!=null) {
 			char head='3';
@@ -29,7 +28,7 @@ public class Main {
 				}else if(sg==1) {
 					action=s.charAt(i);
 					if(action=='0') {
-						toWrite+=main.tm.read(head)+"\n";
+						bw.write(main.tm.read(head)+"\n");
 					}else if(action=='2') {
 						main.tm.delete(head);
 					}
@@ -39,9 +38,9 @@ public class Main {
 					sg=-1;
 				}
 			}
+			main.tm.reset();
 			s=br.readLine();
 		}
-		bw.write(toWrite+"");
 		long end=System.currentTimeMillis();
 		bw.write((double)(end-start)+"ms");
 		br.close();

@@ -7,8 +7,7 @@ public class TuringMachine {
 	private Tape c2;
 	private int n;
 	public TuringMachine() {
-		first=null;
-		c0=c1=c2=null;
+		first=c0=c1=c2=null;
 		n=-1;
 	}
 	public char read(char head) {
@@ -32,9 +31,8 @@ public class TuringMachine {
 				add.setNext(tmp);
 				first=add;
 				c0=first;
-				n++;//01
+				n++;
 				if(n%2!=0)c1=c1.getPrevious();
-				n+=0;
 			}else if(head=='1') {
 				if(n%2==0) {
 					Tape prev=c1.getPrevious();
@@ -120,5 +118,9 @@ public class TuringMachine {
 				n--;
 			}
 		}
+	}
+	public void reset() {
+		first=c0=c1=c2=null;
+		n=-1;
 	}
 }
