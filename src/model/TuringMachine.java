@@ -1,17 +1,16 @@
 package model;
 
 public class TuringMachine {
-	private Tape first;
 	private Tape c0;
 	private Tape c1;
 	private Tape c2;
 	private int n;
 	public TuringMachine() {
-		first=c0=c1=c2=null;
+		c0=c1=c2=null;
 		n=-1;
 	}
 	public char read(char head) {
-		if(first!=null) {
+		if(c0!=null) {
 			if(head=='0') {
 				return c0.getName();
 			}else if(head=='1') {
@@ -24,13 +23,12 @@ public class TuringMachine {
 	}
 	public void add(char head,char name) {
 		Tape add=new Tape(name);
-		if(first!=null) {
+		if(c0!=null) {
 			if(head=='0') {
-				Tape tmp=first;
+				Tape tmp=c0;
 				tmp.setPrevious(add);
 				add.setNext(tmp);
-				first=add;
-				c0=first;
+				c0=add;
 				n++;
 				if(n%2!=0)c1=c1.getPrevious();
 			}else if(head=='1') {
@@ -39,9 +37,7 @@ public class TuringMachine {
 					if(prev==null) {
 						add.setNext(c1);
 						c1.setPrevious(add);
-						first=add;
-						c0=first;
-						c1=first;
+						c0=c1=add;
 					}else {
 						prev.setNext(add);
 						add.setPrevious(prev);
@@ -66,24 +62,21 @@ public class TuringMachine {
 				if(n%2==0)c1=c1.getNext();
 			}
 		}else {
-			first=add;
-			c0=c1=c2=first;
+			c0=c1=c2=add;
 			n++;
 		}
 	}
 	public void delete(char head) {
-		if(first!=null) {
+		if(c0!=null) {
 			if(head=='0') {
-				Tape next=first.getNext();
+				Tape next=c0.getNext();
 				if(next!=null) {
 					next.setPrevious(null);
-					first=next;
+					c0=next;
 					if(n%2!=0)c1=c1.getNext();
 				}else {
-					first=null;
-					c1=c2=first;
+					c0=c1=c2=null;
 				}
-				c0=first;
 				n--;
 			}else if(head=='1') {
 				Tape prev=c1.getPrevious();
@@ -98,10 +91,7 @@ public class TuringMachine {
 				}else {
 					c1.setNext(null);
 					if(next!=null)next.setPrevious(null);
-					first=next;
-					c0=first;
-					c1=first;
-					c2=first;
+					c0=c1=c2=next;
 				}
 				n--;
 			}else if(head=='2') {
@@ -112,15 +102,14 @@ public class TuringMachine {
 					c2=prev;
 					if(n%2==0)c1=c1.getPrevious();
 				}else {
-					first=null;
-					c0=c1=c2=first;
+					c0=c1=c2=null;
 				}
 				n--;
 			}
 		}
 	}
 	public void reset() {
-		first=c0=c1=c2=null;
+		c0=c1=c2=null;
 		n=-1;
 	}
 }

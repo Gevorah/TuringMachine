@@ -42,7 +42,7 @@ public class Main {
 			s=br.readLine();
 		}
 		long end=System.currentTimeMillis();
-		bw.write((double)(end-start)+"ms");
+		System.out.println((double)(end-start)+"ms");
 		br.close();
 		bw.close();
 	}
